@@ -7,10 +7,7 @@ import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import ru.itgirl.libraryproject.dto.AuthorCreateDto;
-import ru.itgirl.libraryproject.dto.AuthorDto;
-import ru.itgirl.libraryproject.dto.AuthorUpdateDto;
-import ru.itgirl.libraryproject.dto.BookDto;
+import ru.itgirl.libraryproject.dto.*;
 import ru.itgirl.libraryproject.model.Author;
 import ru.itgirl.libraryproject.repository.AuthorRepository;
 
