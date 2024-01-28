@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="init db" author="sokolova_es">
+        <sql>
+            create table if not exists users
+            (
+            id bigserial,
+            username      varchar NOT NULL PRIMARY KEY,
+            password      varchar NOT NULL,
+            enabled       boolean DEFAULT TRUE
+            );
+
+            create table if not exists authorities
+        (
+        id bigserial,
+        username  varchar NOT NULL,
+        authority varchar NOT NULL,
+        FOREIGN KEY (username) REFERENCES users (username)
+        );
+
+            insert into users (username, password) values
+            ('admin1', '098pass'), ('user1', '765pass');
+
+        insert into authorities (username, authority) values
+        ('admin1', 'admin'), ('user1', 'user');
+
+
+        </sql>
+    </changeSet>
+</databaseChangeLog>
