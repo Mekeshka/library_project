@@ -42,14 +42,29 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public AuthorDto getByNameV1(String name) {
-        Author author = authorRepository.findAuthorByName(name).orElseThrow();
-        return convertToDto(author);
+        log.info("Try to find author by name {}", name);
+        Optional<Author> author = authorRepository.findAuthorByName(name);
+        if (author.isPresent()) {
+            AuthorDto authorDto = convertEntityToDto(author.get());
+            log.info("Author: {}", authorDto.toString());
+            return authorDto;
+        } else {
+            log.error("Author with name {} not found", name);
+            throw new NoSuchElementException("No value present");
+        }
     }
 
     @Override
     public AuthorDto getByNameV2(String name) {
-        Author author = authorRepository.findAuthorByNameBySql(name).orElseThrow();
-        return convertToDto(author);
+        Optional<Author> author = authorRepository.findAuthorByNameBySql(name);
+        if (author.isPresent()) {
+            AuthorDto authorDto = convertEntityToDto(author.get());
+            log.info("Author: {}", authorDto.toString());
+            return authorDto;
+        } else {
+            log.error("Author with name {} not found", name);
+            throw new NoSuchElementException("No value present");
+        }
     }
 
     @Override
@@ -62,8 +77,15 @@ public class AuthorServiceImpl implements AuthorService {
                 return cb.equal(root.get("name"), name);
             }
         });
-        Author author = authorRepository.findOne(specification).orElseThrow();
-        return convertToDto(author);
+        Optional<Author> author = authorRepository.findOne(specification);
+        if (author.isPresent()) {
+            AuthorDto authorDto = convertEntityToDto(author.get());
+            log.info("Author: {}", authorDto.toString());
+            return authorDto;
+        } else {
+            log.error("Author with name {} not found", name);
+            throw new NoSuchElementException("No value present");
+        }
     }
 
     private AuthorDto convertToDto(Author author) {
@@ -85,6 +107,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public AuthorDto createAuthor(AuthorCreateDto authorCreateDto) {
+        log.info("Creating author");
         Author author = authorRepository.save(convertDtoToEntity(authorCreateDto));
         AuthorDto authorDto = convertEntityToDto(author);
         return authorDto;
@@ -120,6 +143,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public AuthorDto updateAuthor(AuthorUpdateDto authorUpdateDto) {
+        log.info("Updating author");
         Author author = authorRepository.findById(authorUpdateDto.getId()).orElseThrow();
         author.setName(authorUpdateDto.getName());
         author.setSurname(authorUpdateDto.getSurname());
@@ -130,11 +154,13 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public void deleteAuthor(Long id) {
+        log.info("Deleting author by id {}", id);
         authorRepository.deleteById(id);
     }
 
     @Override
     public List<AuthorDto> getAllAuthors() {
+        log.info("Listing all authors");
         List<Author> authors = authorRepository.findAll();
         return authors.stream().map(this::convertEntityToDto).collect(Collectors.toList());
     }
