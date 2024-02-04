@@ -9,7 +9,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import ru.itgirl.libraryproject.dto.*;
 import ru.itgirl.libraryproject.model.Book;
+import ru.itgirl.libraryproject.model.Genre;
 import ru.itgirl.libraryproject.repository.BookRepository;
+import ru.itgirl.libraryproject.repository.GenreRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
 public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
+    private final GenreRepository genreRepository;
     @Override
     public BookDto getByNameV1(String name) {
         Book book = bookRepository.findBookByName(name).orElseThrow();
@@ -46,10 +49,35 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookDto createBook(BookCreateDto bookCreateDto) {
-        Book book = bookRepository.save(convertDtoToEntity(bookCreateDto));
+//        Book book = bookRepository.save(convertDtoToEntity(bookCreateDto));
+//        Genre genre = genreRepository.findById(bookCreateDto.getGenreId()).orElseThrow();
+//        BookDto bookDto = convertEntityToDto(book);
+//        return bookDto;
+        Genre genre = genreRepository.findById(bookCreateDto.getGenreID()).orElseThrow();
+        Book book = convertDtoToEntity(bookCreateDto);
+        book.setGenre(genre);
+        book = bookRepository.save(book);
         BookDto bookDto = convertEntityToDto(book);
         return bookDto;
     }
+    @Override
+    public BookDto updateBook(BookUpdateDto bookUpdateDto) {
+        Book book = bookRepository.findById(bookUpdateDto.getId()).orElseThrow();
+        book.setName(bookUpdateDto.getName());
+        if (!book.getGenre().getId().equals(bookUpdateDto.getGenreID())) {
+            Genre genre = genreRepository.findById(bookUpdateDto.getGenreID()).orElseThrow();
+            book.setGenre(genre);
+        };
+        book = bookRepository.save(book);
+        BookDto bookDto = convertEntityToDto(book);
+        return bookDto;
+    }
+    private Book convertDtoToEntity(BookCreateDto bookCreateDto) {
+        return Book.builder()
+                .name(bookCreateDto.getName())
+                .build();
+    }
+
     private BookDto convertEntityToDto(Book book) {
         return BookDto.builder()
                 .id(book.getId())
@@ -57,12 +85,20 @@ public class BookServiceImpl implements BookService {
                 .name(book.getName())
                 .build();
     }
-    private Book convertDtoToEntity(BookCreateDto bookCreateDto) {
-        return Book.builder()
-                .name(bookCreateDto.getName())
-//                .genre(bookCreateDto.getGenre().getName())
-                .build();
-    }
+
+//    private BookDto convertEntityToDto(Book book) {
+//        return BookDto.builder()
+//                .id(book.getId())
+//                .genre(book.getGenre().getName())
+//                .name(book.getName())
+//                .build();
+//    }
+//    private Book convertDtoToEntity(BookCreateDto bookCreateDto) {
+//        return Book.builder()
+//                .name(bookCreateDto.getName())
+////                .genre(bookCreateDto.getGenre().getName())
+//                .build();
+//    }
 
 //    private BookDto convertEntityToDto(Book book) {
 //        List<BookDto> bookDtoList = null;
@@ -84,15 +120,15 @@ public class BookServiceImpl implements BookService {
 //                .build();
 //        return bookDto;
 //    }
-    @Override
-    public BookDto updateBook(BookUpdateDto bookUpdateDto) {
-        Book book = bookRepository.findById(bookUpdateDto.getId()).orElseThrow();
-        book.setName(bookUpdateDto.getName());
-//        book.setGenre(bookUpdateDto.getGenre());
-        Book savedBook = bookRepository.save(book);
-        BookDto bookDto = convertEntityToDto(savedBook);
-        return bookDto;
-    }
+//    @Override
+//    public BookDto updateBook(BookUpdateDto bookUpdateDto) {
+//        Book book = bookRepository.findById(bookUpdateDto.getId()).orElseThrow();
+//        book.setName(bookUpdateDto.getName());
+////        book.setGenre(bookUpdateDto.getGenre());
+//        Book savedBook = bookRepository.save(book);
+//        BookDto bookDto = convertEntityToDto(savedBook);
+//        return bookDto;
+//    }
     @Override
     public void deleteBook(Long id) {
         bookRepository.deleteById(id);

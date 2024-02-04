@@ -22,12 +22,14 @@
         authority varchar NOT NULL,
         FOREIGN KEY (username) REFERENCES users (username)
         );
-
             insert into users (username, password) values
-            ('admin1', '098pass'), ('user1', '765pass');
+            ('admin1', ''), ('user1', '');
 
         insert into authorities (username, authority) values
         ('admin1', 'admin'), ('user1', 'user');
+
+
+
 
 
         </sql>
