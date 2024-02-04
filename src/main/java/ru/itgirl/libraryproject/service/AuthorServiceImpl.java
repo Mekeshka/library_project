@@ -8,9 +8,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import ru.itgirl.libraryproject.dto.*;
+import ru.itgirl.libraryproject.dto.AuthorCreateDto;
+import ru.itgirl.libraryproject.dto.AuthorDto;
+import ru.itgirl.libraryproject.dto.AuthorUpdateDto;
+import ru.itgirl.libraryproject.dto.BookDto;
 import ru.itgirl.libraryproject.model.Author;
-import ru.itgirl.libraryproject.model.Book;
 import ru.itgirl.libraryproject.repository.AuthorRepository;
 
 import java.util.List;
@@ -22,7 +24,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class AuthorServiceImpl implements AuthorService {
-
     private final AuthorRepository authorRepository;
 
     @Override
@@ -61,7 +62,6 @@ public class AuthorServiceImpl implements AuthorService {
                 return cb.equal(root.get("name"), name);
             }
         });
-
         Author author = authorRepository.findOne(specification).orElseThrow();
         return convertToDto(author);
     }
@@ -109,7 +109,6 @@ public class AuthorServiceImpl implements AuthorService {
                             .build())
                     .toList();
         }
-
         AuthorDto authorDto = AuthorDto.builder()
                 .id(author.getId())
                 .name(author.getName())
@@ -118,6 +117,7 @@ public class AuthorServiceImpl implements AuthorService {
                 .build();
         return authorDto;
     }
+
     @Override
     public AuthorDto updateAuthor(AuthorUpdateDto authorUpdateDto) {
         Author author = authorRepository.findById(authorUpdateDto.getId()).orElseThrow();
@@ -127,10 +127,12 @@ public class AuthorServiceImpl implements AuthorService {
         AuthorDto authorDto = convertEntityToDto(savedAuthor);
         return authorDto;
     }
+
     @Override
     public void deleteAuthor(Long id) {
         authorRepository.deleteById(id);
     }
+
     @Override
     public List<AuthorDto> getAllAuthors() {
         List<Author> authors = authorRepository.findAll();

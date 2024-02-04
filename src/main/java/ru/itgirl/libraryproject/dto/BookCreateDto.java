@@ -1,7 +1,9 @@
 package ru.itgirl.libraryproject.dto;
-import lombok.*;
-import ru.itgirl.libraryproject.model.Author;
-import ru.itgirl.libraryproject.model.Genre;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor

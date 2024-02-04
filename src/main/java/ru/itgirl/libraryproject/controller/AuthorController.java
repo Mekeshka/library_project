@@ -10,6 +10,7 @@ import ru.itgirl.libraryproject.service.AuthorService;
 @RequiredArgsConstructor
 public class AuthorController {
     private final AuthorService authorService;
+
     @GetMapping("/authors")
     String getAuthorsView(Model model) {
         model.addAttribute("authors", authorService.getAllAuthors());

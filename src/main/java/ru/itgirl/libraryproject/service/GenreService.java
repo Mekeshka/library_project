@@ -1,6 +1,5 @@
 package ru.itgirl.libraryproject.service;
 
-import ru.itgirl.libraryproject.dto.AuthorDto;
 import ru.itgirl.libraryproject.dto.GenreDto;
 
 public interface GenreService {

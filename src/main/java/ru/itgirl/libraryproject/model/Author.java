@@ -11,7 +11,6 @@ import java.util.Set;
 @Getter
 @Entity
 public class Author {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

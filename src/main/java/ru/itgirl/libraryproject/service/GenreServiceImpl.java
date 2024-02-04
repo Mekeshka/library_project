@@ -2,20 +2,25 @@ package ru.itgirl.libraryproject.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.itgirl.libraryproject.dto.*;
+import ru.itgirl.libraryproject.dto.AuthorDtoForGenre;
+import ru.itgirl.libraryproject.dto.BookDtoForGenre;
+import ru.itgirl.libraryproject.dto.GenreDto;
 import ru.itgirl.libraryproject.model.Genre;
 import ru.itgirl.libraryproject.repository.GenreRepository;
+
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class GenreServiceImpl implements GenreService {
     private final GenreRepository genreRepository;
+
     @Override
     public GenreDto getGenreById(Long id) {
         Genre genre = genreRepository.findById(id).orElseThrow();
         return convertToDto(genre);
     }
+
     private GenreDto convertToDto(Genre genre) {
         List<BookDtoForGenre> bookDtoList = genre.getBooks()
                 .stream()
